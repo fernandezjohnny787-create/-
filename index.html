@@ -1,0 +1,2691 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+  />
+  <title>北航期末突击 21 天</title>
+  <style>
+    :root {
+      --bg: #f4f6f9;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --primary: #3b82f6;
+      --primary-dark: #2563eb;
+      --primary-soft: #dbeafe;
+      --green: #10b981;
+      --yellow: #f59e0b;
+      --red: #ef4444;
+      --red-dark: #b91c1c;
+      --purple: #8b5cf6;
+      --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+      --radius: 18px;
+      --radius-sm: 12px;
+      --nav-height: 126px;
+      --top-height: 132px;
+      --transition: all 0.25s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      font-family: "PingFang SC", "Microsoft YaHei", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--text);
+      height: 100%;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 480px;
+      min-height: 100vh;
+      position: relative;
+      background: linear-gradient(180deg, #f7f9fc 0%, #f1f5f9 100%);
+      overflow-x: hidden;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(244, 246, 249, 0.96);
+      backdrop-filter: blur(8px);
+      padding: 14px 14px 10px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.15);
+    }
+
+    .panel {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .top-card {
+      padding: 14px;
+    }
+
+    .title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .game-title {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+
+    .restart-btn {
+      border: none;
+      background: #eef2ff;
+      color: #4338ca;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .restart-btn:active {
+      transform: scale(0.96);
+    }
+
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .meta-chip {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .exam-week {
+      background: #fee2e2;
+      color: var(--red-dark);
+      border-color: #fecaca;
+    }
+
+    .status-grid {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .energy-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .status-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .progress {
+      width: 100%;
+      height: 12px;
+      background: #e5e7eb;
+      border-radius: 999px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      transition: width 0.35s ease, background 0.35s ease;
+    }
+
+    .energy-fill {
+      background: linear-gradient(90deg, #60a5fa, #2563eb);
+    }
+
+    .money-box {
+      min-width: 110px;
+      text-align: right;
+      background: linear-gradient(135deg, #fff7ed, #fffbeb);
+      border: 1px solid #fde68a;
+      color: #92400e;
+      padding: 10px 12px;
+      border-radius: 14px;
+      font-weight: 800;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.6);
+    }
+
+    .content {
+      padding: 12px 14px calc(var(--nav-height) + 28px);
+    }
+
+    .section-title {
+      font-size: 15px;
+      font-weight: 800;
+      margin: 14px 2px 10px;
+      color: #334155;
+    }
+
+    .course-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .course-card {
+      padding: 14px;
+      transition: var(--transition);
+    }
+
+    .course-card.examined {
+      opacity: 0.92;
+      border: 1px solid #d1fae5;
+      background: linear-gradient(180deg, #ffffff, #f0fdf4);
+    }
+
+    .course-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .course-name {
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .course-badges {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .badge {
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .badge.exam-time {
+      background: #ede9fe;
+      color: #6d28d9;
+    }
+
+    .badge.done {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .badge.pending {
+      background: #e0f2fe;
+      color: #0369a1;
+    }
+
+    .course-meta {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .course-score-row {
+      margin-top: 8px;
+      display: flex;
+      justify-content: space-between;
+      color: #334155;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .course-progress-fill {
+      background: linear-gradient(90deg, #34d399, #10b981);
+    }
+
+    .log-card {
+      padding: 12px;
+    }
+
+        .log-box {
+      background: #0f172a;
+      color: #e2e8f0;
+            min-height: 280px;
+      max-height: 360px;
+      overflow-y: auto;
+      border-radius: 14px;
+      padding: 12px 12px 20px;
+      font-size: 13px;
+      line-height: 1.6;
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.08);
+    }
+
+    .log-item {
+      margin-bottom: 8px;
+      word-break: break-word;
+    }
+
+    .log-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .log-time {
+      color: #93c5fd;
+      font-weight: 800;
+      margin-right: 6px;
+    }
+
+    .log-normal {
+      color: #e2e8f0;
+    }
+
+    .log-good {
+      color: #86efac;
+      font-weight: 700;
+    }
+
+    .log-warn {
+      color: #fde68a;
+      font-weight: 700;
+    }
+
+    .log-bad {
+      color: #fca5a5;
+      font-weight: 700;
+    }
+
+    .log-event {
+      color: #c4b5fd;
+      font-weight: 700;
+    }
+
+    .log-ai {
+      color: #67e8f9;
+      font-weight: 700;
+    }
+
+        .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 480px;
+      padding: 16px 12px 18px;
+      background: rgba(244, 246, 249, 0.96);
+      backdrop-filter: blur(8px);
+      border-top: 1px solid rgba(148, 163, 184, 0.15);
+      z-index: 25;
+    }
+
+    .nav-card {
+      padding: 10px;
+    }
+
+    .nav-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .nav-btn {
+      border: none;
+      border-radius: 14px;
+      padding: 10px 6px;
+      min-height: 60px;
+      background: white;
+      box-shadow: inset 0 0 0 1px #e5e7eb;
+      color: #334155;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      line-height: 1.3;
+    }
+
+    .nav-btn:hover {
+      background: #f8fafc;
+    }
+
+    .nav-btn:active {
+      transform: translateY(1px) scale(0.98);
+    }
+
+    .nav-btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.55;
+      background: #e5e7eb;
+      color: #64748b;
+      box-shadow: none;
+    }
+
+    .ai-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 13px;
+      color: #475569;
+      font-weight: 800;
+      padding: 4px 0 2px;
+    }
+
+    .ai-toggle input {
+      width: 18px;
+      height: 18px;
+    }
+
+    .modal-mask,
+    .exam-mask,
+    .settlement-mask {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+    }
+
+    .modal-mask.show,
+    .exam-mask.show,
+    .settlement-mask.show {
+      display: flex;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .modal-mask {
+      background: rgba(15, 23, 42, 0.45);
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 440px;
+      background: white;
+      border-radius: 22px;
+      box-shadow: 0 20px 50px rgba(15, 23, 42, 0.22);
+      overflow: hidden;
+      animation: popIn 0.24s ease;
+      max-height: 88vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 16px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .close-btn {
+      border: none;
+      background: #f1f5f9;
+      color: #475569;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      font-size: 18px;
+      cursor: pointer;
+      font-weight: 800;
+    }
+
+    .modal-body {
+      padding: 14px 16px 16px;
+      overflow-y: auto;
+    }
+
+    .modal-desc {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 12px;
+      line-height: 1.6;
+    }
+
+    .select-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .select-card {
+      border: 1px solid #e5e7eb;
+      background: #f8fafc;
+      border-radius: 16px;
+      padding: 12px;
+      cursor: pointer;
+      transition: var(--transition);
+      text-align: left;
+    }
+
+    .select-card:active {
+      transform: scale(0.98);
+    }
+
+    .select-card.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      background: #e5e7eb;
+    }
+
+    .select-name {
+      font-size: 16px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .select-sub {
+      font-size: 12px;
+      color: #64748b;
+      font-weight: 700;
+      line-height: 1.5;
+    }
+
+    .shop-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .shop-section {
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 12px;
+    }
+
+    .shop-title {
+      font-size: 15px;
+      font-weight: 800;
+      margin-bottom: 10px;
+      color: #334155;
+    }
+
+    .item-card {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+
+    .item-card:last-child {
+      margin-bottom: 0;
+    }
+
+    .item-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+      align-items: center;
+    }
+
+    .item-name {
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .item-price {
+      color: #92400e;
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-radius: 999px;
+      padding: 4px 8px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .item-desc {
+      color: #64748b;
+      font-size: 12px;
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+
+    .action-btn {
+      width: 100%;
+      border: none;
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .buy-btn {
+      background: linear-gradient(90deg, #3b82f6, #2563eb);
+      color: white;
+    }
+
+    .use-btn {
+      background: linear-gradient(90deg, #10b981, #059669);
+      color: white;
+    }
+
+    .secondary-btn {
+      background: #e2e8f0;
+      color: #334155;
+    }
+
+    .danger-btn {
+      background: linear-gradient(90deg, #ef4444, #dc2626);
+      color: white;
+    }
+
+    .question-card {
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    .question-title {
+      font-size: 16px;
+      font-weight: 800;
+      margin-bottom: 10px;
+      color: #0f172a;
+      line-height: 1.5;
+    }
+
+    .option-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .option-btn {
+      border: 1px solid #cbd5e1;
+      background: white;
+      color: #334155;
+      border-radius: 12px;
+      padding: 12px;
+      text-align: left;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .option-btn:active {
+      transform: scale(0.99);
+    }
+
+    .exam-mask {
+      background: radial-gradient(circle at center, rgba(239,68,68,0.18), rgba(127,29,29,0.95));
+      z-index: 80;
+    }
+
+    .exam-panel {
+      width: 100%;
+      max-width: 420px;
+      background: linear-gradient(180deg, #fff1f2, #ffe4e6);
+      border: 2px solid #fecaca;
+      border-radius: 24px;
+      padding: 22px 18px;
+      text-align: center;
+      box-shadow: 0 30px 60px rgba(127, 29, 29, 0.35);
+      animation: pulseUp 0.35s ease;
+    }
+
+    .exam-alert {
+      font-size: 34px;
+      margin-bottom: 8px;
+    }
+
+    .exam-title {
+      font-size: 24px;
+      font-weight: 900;
+      color: #991b1b;
+      margin-bottom: 8px;
+    }
+
+    .exam-text {
+      font-size: 14px;
+      color: #7f1d1d;
+      line-height: 1.7;
+      margin-bottom: 18px;
+      font-weight: 700;
+    }
+
+    .settlement-mask {
+      background: rgba(15, 23, 42, 0.72);
+      z-index: 90;
+      align-items: flex-start;
+      overflow-y: auto;
+      padding: 20px 14px 120px;
+    }
+
+    .settlement-panel {
+      width: 100%;
+      max-width: 440px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 24px;
+      box-shadow: 0 30px 70px rgba(15, 23, 42, 0.32);
+      overflow: hidden;
+      animation: popIn 0.28s ease;
+    }
+
+    .settlement-header {
+      background: linear-gradient(135deg, #1d4ed8, #7c3aed);
+      color: white;
+      padding: 20px 18px;
+    }
+
+    .settlement-title {
+      font-size: 24px;
+      font-weight: 900;
+      margin-bottom: 6px;
+    }
+
+    .settlement-sub {
+      font-size: 13px;
+      line-height: 1.7;
+      opacity: 0.92;
+    }
+
+    .settlement-body {
+      padding: 16px;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .summary-card {
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .summary-num {
+      font-size: 22px;
+      font-weight: 900;
+      color: #0f172a;
+      margin-bottom: 4px;
+    }
+
+    .summary-label {
+      font-size: 12px;
+      color: #64748b;
+      font-weight: 700;
+    }
+
+    .result-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .result-card {
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 12px;
+    }
+
+    .result-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .result-name {
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .result-score {
+      font-size: 15px;
+      font-weight: 900;
+      color: #1d4ed8;
+    }
+
+    .result-meta {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 12px;
+      color: #64748b;
+      font-weight: 700;
+    }
+
+    .comment-box {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #1e3a8a;
+      border-radius: 16px;
+      padding: 14px;
+      line-height: 1.8;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+
+    .stats-list {
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 12px;
+      margin-bottom: 14px;
+      font-size: 13px;
+      color: #334155;
+      line-height: 1.8;
+      font-weight: 700;
+    }
+
+    .footer-note {
+      font-size: 12px;
+      color: #64748b;
+      line-height: 1.7;
+      text-align: center;
+      margin-top: 4px;
+    }
+
+    .welcome-list {
+      margin: 0;
+      padding-left: 18px;
+      color: #475569;
+      line-height: 1.8;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .empty-tip {
+      color: #94a3b8;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes popIn {
+      from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.97);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes pulseUp {
+      0% {
+        transform: scale(0.96);
+        opacity: 0.9;
+      }
+      70% {
+        transform: scale(1.02);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    @media (max-width: 380px) {
+      .nav-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .select-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .summary-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="topbar">
+      <div class="panel top-card">
+        <div class="title-row">
+          <div class="game-title">北航期末突击 21 天</div>
+          <button class="restart-btn" id="restartBtn">重新开始</button>
+        </div>
+        <div class="meta-row">
+          <div class="meta-chip" id="dayChip">第 1 天 / 21 天</div>
+          <div class="meta-chip" id="periodChip">上午</div>
+          <div class="meta-chip" id="phaseChip">备考期</div>
+        </div>
+        <div class="status-grid">
+          <div class="energy-wrap">
+            <div class="status-label">
+              <span>精力值</span>
+              <span id="energyText">100 / 100</span>
+            </div>
+            <div class="progress">
+              <div class="progress-fill energy-fill" id="energyFill"></div>
+            </div>
+          </div>
+          <div class="money-box" id="moneyText">🪙 80</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="section-title">课程总览</div>
+      <div class="course-list" id="courseList"></div>
+
+      <div class="section-title">行动日志</div>
+      <div class="panel log-card">
+        <div class="log-box" id="logBox"></div>
+      </div>
+    </div>
+
+    <div class="bottom-nav">
+      <div class="panel nav-card">
+        <div class="nav-grid">
+          <button class="nav-btn" id="studyBtn">📚<br />选课复习</button>
+          <button class="nav-btn" id="workBtn">💼<br />兼职赚钱</button>
+          <button class="nav-btn" id="restBtn">🛏️<br />休息</button>
+          <button class="nav-btn" id="shopBtn">🎒<br />超市/背包</button>
+        </div>
+        <label class="ai-toggle">
+          <input type="checkbox" id="aiToggle" />
+          <span>启用小航AI辅导</span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-mask" id="modalMask">
+    <div class="modal" id="modalBox">
+      <div class="modal-header">
+        <div class="modal-title" id="modalTitle">标题</div>
+        <button class="close-btn" id="closeModalBtn">×</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <div class="exam-mask" id="examMask">
+    <div class="exam-panel">
+      <div class="exam-alert">🚨</div>
+      <div class="exam-title">考试强制开始</div>
+      <div class="exam-text" id="examText">请立即参加考试。</div>
+      <button class="action-btn danger-btn" id="takeExamBtn">参加考试</button>
+    </div>
+  </div>
+
+  <div class="settlement-mask" id="settlementMask">
+    <div class="settlement-panel">
+      <div class="settlement-header">
+        <div class="settlement-title">本局结算报告</div>
+        <div class="settlement-sub">
+          21 天突击结束，北航期末生存结果已出炉。下面是你的最终成绩与学院路风味评价。
+        </div>
+      </div>
+      <div class="settlement-body" id="settlementBody"></div>
+    </div>
+  </div>
+
+  <script>
+    /**********************************************************************
+     * 北航期末突击 21 天
+     * --------------------------------------------------------------------
+     * 单文件 H5 移动端小游戏
+     * 说明：
+     * 1. 所有 HTML / CSS / JS 均在此文件中
+     * 2. 代码刻意写得完整、注释充分，便于课程大作业展示
+     * 3. 核心功能包括：
+     *    - 21 天时间推进
+     *    - 6 门课程随机排考
+     *    - 强制考试拦截
+     *    - 复习 / 兼职 / 休息 / 商店背包
+     *    - AI 辅导答题暴击
+     *    - 随机事件与日志系统
+     *    - 最终 GPA 结算
+     **********************************************************************/
+
+    /**********************************************************************
+     * 一、基础数据定义
+     **********************************************************************/
+
+    const COURSE_NAMES = ["数分", "大物", "理力", "C语言", "航概", "英语"];
+
+    const SHOP_ITEMS = {
+      redbull: {
+        key: "redbull",
+        name: "红牛",
+        price: 25,
+        desc: "恢复 30 点精力。凌晨图书馆外的一口神药。",
+      },
+      notes: {
+        key: "notes",
+        name: "笔记",
+        price: 40,
+        desc: "下一次复习额外 +15 分，仅生效一次。",
+      },
+      shampoo: {
+        key: "shampoo",
+        name: "洗发水",
+        price: 60,
+        desc: "恢复全状态：精力回满，并清除部分负面状态。",
+      },
+    };
+
+    const PART_TIME_JOBS = [
+      {
+        key: "primary",
+        name: "小学家教",
+        energyCost: 10,
+        moneyGain: 30,
+        desc: "消耗 10 精力，获得 30 金钱。",
+      },
+      {
+        key: "middle",
+        name: "初中家教",
+        energyCost: 20,
+        moneyGain: 60,
+        desc: "消耗 20 精力，获得 60 金钱。",
+      },
+      {
+        key: "high",
+        name: "高中家教",
+        energyCost: 35,
+        moneyGain: 100,
+        desc: "消耗 35 精力，获得 100 金钱。",
+      },
+    ];
+
+    const AI_QUESTIONS = [
+      {
+        question: "设随机变量 X 与 Y 相互独立，且 E(X)=2，E(Y)=3，则 E(2X-Y) 等于多少？",
+        options: ["1", "4", "7", "-1"],
+        answer: 0,
+        explanation: "E(2X-Y)=2E(X)-E(Y)=4-3=1。"
+      },
+      {
+        question: "若 C 语言中 int a = 5; 执行 a++ 后，a 的值变为？",
+        options: ["4", "5", "6", "无法确定"],
+        answer: 2,
+        explanation: "自增运算后 a 变为 6。"
+      },
+      {
+        question: "在经典力学中，牛顿第二定律可表述为哪一项？",
+        options: ["F = mv", "F = ma", "E = mc²", "p = mv²"],
+        answer: 1,
+        explanation: "牛顿第二定律是 F = ma。"
+      },
+      {
+        question: "若一个等比数列首项为 2，公比为 3，则第三项为？",
+        options: ["6", "9", "18", "27"],
+        answer: 2,
+        explanation: "第三项为 2×3²=18。"
+      },
+      {
+        question: "关于指针，以下哪项最准确？",
+        options: ["指针只能存整数", "指针本质上存储地址", "指针不能参与函数传参", "所有指针大小都不可能相同"],
+        answer: 1,
+        explanation: "指针变量的核心作用是保存内存地址。"
+      },
+      {
+        question: "若函数 f(x)=x²，则 f'(x) 等于？",
+        options: ["x", "2x", "x²", "2"],
+        answer: 1,
+        explanation: "x² 的导数是 2x。"
+      },
+      {
+        question: "以下哪一项最符合“系统总动量守恒”的前提？",
+        options: ["系统所受合外力为零", "系统内部能量不变", "系统速度恒定", "系统质量无限大"],
+        answer: 0,
+        explanation: "总动量守恒要求系统所受合外力为零。"
+      },
+      {
+        question: "线性表采用顺序存储结构时，其逻辑上相邻元素在物理位置上通常？",
+        options: ["不一定相邻", "一定连续相邻", "随机分布", "只在链表中相邻"],
+        answer: 1,
+        explanation: "顺序存储的核心特征就是物理地址连续。"
+      },
+      {
+        question: "若英语句子中使用 present perfect tense，通常强调什么？",
+        options: ["过去一次性动作", "将来计划", "过去发生对现在有影响", "纯粹假设"],
+        answer: 2,
+        explanation: "现在完成时强调过去动作对现在的影响或持续。"
+      },
+      {
+        question: "北航期末周最危险的策略通常是？",
+        options: ["均衡分配复习时间", "提前规划考试周", "把所有希望押在最后两回合", "先处理最近考试科目"],
+        answer: 2,
+        explanation: "最后两回合再抢救通常风险极高。"
+      },
+      {
+        question: "若矩阵 A 为 2×3，矩阵 B 为 3×2，则 AB 的维度为？",
+        options: ["2×2", "3×3", "2×3", "3×2"],
+        answer: 0,
+        explanation: "矩阵乘法结果维度取外侧，因此 AB 为 2×2。"
+      },
+      {
+        question: "程序设计中“时间复杂度 O(n log n)”通常比 O(n²) 在大规模输入下？",
+        options: ["更慢", "更快", "完全一样", "无法比较"],
+        answer: 1,
+        explanation: "在大规模输入下，O(n log n) 通常优于 O(n²)。"
+      }
+    ];
+
+    const STUDY_EVENTS = [
+      {
+        name: "灵光一闪",
+        type: "good",
+        effect(state, course, payload) {
+          course.progress += 8;
+          return "灵光一闪，额外 +8 复习点。";
+        }
+      },
+      {
+        name: "看错考纲",
+        type: "bad",
+        effect(state, course, payload) {
+          payload.baseGain -= 5;
+          return "你看错了考纲，本次复习收益 -5。";
+        }
+      },
+      {
+        name: "食堂奇遇",
+        type: "good",
+        effect(state, course, payload) {
+          state.energy = clamp(state.energy + 10, 0, 100);
+          return "食堂阿姨手稳如神，心情愉悦，恢复 10 精力。";
+        }
+      },
+      {
+        name: "室友带飞",
+        type: "good",
+        effect(state, course, payload) {
+          course.progress += 5;
+          return "室友顺手给你讲明白了，额外 +5 复习点。";
+        }
+      },
+      {
+        name: "手机摸鱼",
+        type: "bad",
+        effect(state, course, payload) {
+          payload.baseGain -= 4;
+          return "你忍不住刷了手机，本次收益 -4。";
+        }
+      },
+      {
+        name: "图书馆抢到神位",
+        type: "good",
+        effect(state, course, payload) {
+          course.progress += 6;
+          return "抢到神位，学习效率拉满，额外 +6 复习点。";
+        }
+      },
+      {
+        name: "咖啡上头",
+        type: "event",
+        effect(state, course, payload) {
+          payload.baseGain += 4;
+          state.flags.restPenalty = 8;
+          return "咖啡上头，本次收益 +4，但下次休息恢复减少 8。";
+        }
+      },
+      {
+        name: "老师画重点",
+        type: "good",
+        effect(state, course, payload) {
+          payload.baseGain += 7;
+          return "老师突然画重点，本次收益 +7。";
+        }
+      },
+      {
+        name: "复习材料丢页",
+        type: "bad",
+        effect(state, course, payload) {
+          payload.baseGain -= 3;
+          return "复习材料缺了几页，本次收益 -3。";
+        }
+      },
+      {
+        name: "晚风清醒",
+        type: "event",
+        effect(state, course, payload) {
+          state.energy = clamp(state.energy + 5, 0, 100);
+          payload.baseGain += 2;
+          return "操场吹了会儿风，恢复 5 精力且本次收益 +2。";
+        }
+      }
+    ];
+
+    const WORK_EVENTS = [
+      {
+        name: "家长加红包",
+        type: "good",
+        effect(state, job) {
+          state.money += 20;
+          return "家长对你的讲题能力很满意，额外塞了 20 红包。";
+        }
+      },
+      {
+        name: "学生太难教",
+        type: "bad",
+        effect(state, job) {
+          state.energy = clamp(state.energy - 8, 0, 100);
+          return "学生把你问沉默了，额外消耗 8 精力。";
+        }
+      },
+      {
+        name: "顺手买奶茶",
+        type: "event",
+        effect(state, job) {
+          state.money = Math.max(0, state.money - 12);
+          state.energy = clamp(state.energy + 6, 0, 100);
+          return "路上买了奶茶，-12 金钱，+6 精力。";
+        }
+      },
+      {
+        name: "讲题超常发挥",
+        type: "good",
+        effect(state, job) {
+          state.money += 15;
+          return "你把题讲明白了，学生家长口碑上涨，额外 +15 金钱。";
+        }
+      }
+    ];
+
+    const REST_EVENTS = [
+      {
+        name: "午睡香甜",
+        type: "good",
+        effect(state, payload) {
+          payload.recovery += 8;
+          return "午睡香甜，额外多恢复 8 精力。";
+        }
+      },
+      {
+        name: "宿舍太吵",
+        type: "bad",
+        effect(state, payload) {
+          payload.recovery -= 10;
+          return "宿舍太吵，休息效果 -10。";
+        }
+      },
+      {
+        name: "做梦梦到考点",
+        type: "event",
+        effect(state, payload) {
+          state.flags.nextStudyBonus += 5;
+          return "梦里梦到考点了，下次复习额外 +5。";
+        }
+      },
+      {
+        name: "睡过头但很爽",
+        type: "event",
+        effect(state, payload) {
+          payload.recovery += 4;
+          return "虽然有点迷糊，但恢复效果还不错，额外 +4。";
+        }
+      }
+    ];
+
+    /**********************************************************************
+     * 二、全局状态对象
+     **********************************************************************/
+
+    let gameState = null;
+
+    /**********************************************************************
+     * 三、DOM 引用
+     **********************************************************************/
+
+    const dayChip = document.getElementById("dayChip");
+    const periodChip = document.getElementById("periodChip");
+    const phaseChip = document.getElementById("phaseChip");
+    const energyText = document.getElementById("energyText");
+    const energyFill = document.getElementById("energyFill");
+    const moneyText = document.getElementById("moneyText");
+    const courseList = document.getElementById("courseList");
+    const logBox = document.getElementById("logBox");
+
+    const studyBtn = document.getElementById("studyBtn");
+    const workBtn = document.getElementById("workBtn");
+    const restBtn = document.getElementById("restBtn");
+    const shopBtn = document.getElementById("shopBtn");
+    const aiToggle = document.getElementById("aiToggle");
+    const restartBtn = document.getElementById("restartBtn");
+
+    const modalMask = document.getElementById("modalMask");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalBody = document.getElementById("modalBody");
+    const closeModalBtn = document.getElementById("closeModalBtn");
+
+    const examMask = document.getElementById("examMask");
+    const examText = document.getElementById("examText");
+    const takeExamBtn = document.getElementById("takeExamBtn");
+
+    const settlementMask = document.getElementById("settlementMask");
+    const settlementBody = document.getElementById("settlementBody");
+
+    /**********************************************************************
+     * 四、通用工具函数
+     **********************************************************************/
+
+    function clamp(num, min, max) {
+      return Math.min(max, Math.max(min, num));
+    }
+
+    function randomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function shuffle(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function deepClone(obj) {
+      return JSON.parse(JSON.stringify(obj));
+    }
+
+    function periodToText(period) {
+      return period === 0 ? "上午" : "下午";
+    }
+
+    function formatTimeSlot(day, period) {
+      return `第${day}天${periodToText(period)}`;
+    }
+
+    function getCurrentPhase(day) {
+      return day <= 14 ? "备考期" : "考试周";
+    }
+
+    function getCurrentTimeLabel() {
+      return formatTimeSlot(gameState.day, gameState.period);
+    }
+
+    function getLogTypeClass(type) {
+      switch (type) {
+        case "good":
+          return "log-good";
+        case "warn":
+          return "log-warn";
+        case "bad":
+          return "log-bad";
+        case "event":
+          return "log-event";
+        case "ai":
+          return "log-ai";
+        default:
+          return "log-normal";
+      }
+    }
+
+    /**********************************************************************
+     * 五、初始化课程与考试安排
+     **********************************************************************/
+
+    function buildExamSlots() {
+      const slots = [];
+      for (let day = 15; day <= 21; day++) {
+        slots.push({ day, period: 0 });
+        slots.push({ day, period: 1 });
+      }
+      return slots;
+    }
+
+    function generateCourses() {
+      const examSlots = shuffle(buildExamSlots()).slice(0, COURSE_NAMES.length);
+
+      return COURSE_NAMES.map((name, index) => {
+        const initProgress = randomInt(12, 28);
+        return {
+          id: `course_${index}`,
+          name,
+          progress: initProgress,
+          examDay: examSlots[index].day,
+          examPeriod: examSlots[index].period,
+          examined: false,
+          score: null,
+          gpa: null,
+          lockedProgress: null,
+        };
+      });
+    }
+
+    function createInitialState() {
+      return {
+        day: 1,
+        period: 0,
+        energy: 100,
+        money: 80,
+        courses: generateCourses(),
+        inventory: {
+          redbull: 0,
+          notes: 0,
+          shampoo: 0,
+        },
+                flags: {
+          nextStudyBonus: 0,
+          restPenalty: 0,
+          guaranteedEventCounter: 0,
+        },
+        aiEnabled: false,
+        pendingExamCourseId: null,
+        gameOver: false,
+        stats: {
+          totalStudy: 0,
+          totalWork: 0,
+          totalRest: 0,
+          totalItemsUsed: 0,
+          aiTriggered: 0,
+          aiCorrect: 0,
+          randomEvents: 0,
+          totalExams: 0,
+        },
+        logs: [],
+      };
+    }
+
+    /**********************************************************************
+     * 六、日志系统
+     **********************************************************************/
+
+    function addLog(text, type = "normal") {
+      const item = {
+        time: getCurrentTimeLabel(),
+        text,
+        type,
+      };
+      gameState.logs.push(item);
+      renderLogs();
+    }
+
+    function renderLogs() {
+      if (!gameState.logs.length) {
+        logBox.innerHTML = `<div class="empty-tip">日志为空，先开始你的期末生存吧。</div>`;
+        return;
+      }
+
+      logBox.innerHTML = gameState.logs
+        .map(
+          (log) => `
+          <div class="log-item ${getLogTypeClass(log.type)}">
+            <span class="log-time">[${log.time}]</span>${log.text}
+          </div>
+        `
+        )
+        .join("");
+
+      logBox.scrollTop = logBox.scrollHeight;
+    }
+
+    /**********************************************************************
+     * 七、课程渲染与主 UI 刷新
+     **********************************************************************/
+
+    function getProgressPercent(progress) {
+      // 课程复习进度可视化上限按 160 映射，让增长更明显又不会很快顶满
+      return clamp((progress / 160) * 100, 0, 100);
+    }
+
+    function renderCourses() {
+      courseList.innerHTML = gameState.courses
+        .map((course) => {
+          const percent = getProgressPercent(course.progress);
+          const examTimeText = formatTimeSlot(course.examDay, course.examPeriod);
+          return `
+            <div class="panel course-card ${course.examined ? "examined" : ""}">
+              <div class="course-top">
+                <div class="course-name">${course.name}</div>
+                <div class="course-badges">
+                  <span class="badge exam-time">考试：${examTimeText}</span>
+                  ${
+                    course.examined
+                      ? `<span class="badge done">已考试</span>`
+                      : `<span class="badge pending">待考试</span>`
+                  }
+                </div>
+              </div>
+              <div class="course-meta">
+                <span>复习点数：${Math.round(course.progress)}</span>
+                <span>进度：${Math.round(percent)}%</span>
+              </div>
+              <div class="progress">
+                <div class="progress-fill course-progress-fill" style="width:${percent}%"></div>
+              </div>
+              <div class="course-score-row">
+                <span>${
+                  course.examined
+                    ? `考试成绩：${course.score}`
+                    : "考试状态：未进行"
+                }</span>
+                <span>${
+                  course.examined
+                    ? `绩点：${course.gpa.toFixed(1)}`
+                    : "绩点：待定"
+                }</span>
+              </div>
+            </div>
+          `;
+        })
+        .join("");
+    }
+
+    function updateTopStatus() {
+      dayChip.textContent = `第 ${gameState.day} 天 / 21 天`;
+      periodChip.textContent = periodToText(gameState.period);
+      phaseChip.textContent = getCurrentPhase(gameState.day);
+      phaseChip.className = `meta-chip ${gameState.day >= 15 ? "exam-week" : ""}`;
+
+      energyText.textContent = `${Math.round(gameState.energy)} / 100`;
+      energyFill.style.width = `${clamp(gameState.energy, 0, 100)}%`;
+      moneyText.textContent = `🪙 ${gameState.money}`;
+
+      if (gameState.energy >= 70) {
+        energyFill.style.background = "linear-gradient(90deg, #60a5fa, #2563eb)";
+      } else if (gameState.energy >= 40) {
+        energyFill.style.background = "linear-gradient(90deg, #38bdf8, #0ea5e9)";
+      } else {
+        energyFill.style.background = "linear-gradient(90deg, #f59e0b, #ef4444)";
+      }
+    }
+
+    function refreshAllUI() {
+      updateTopStatus();
+      renderCourses();
+      renderLogs();
+      updateButtonStates();
+      checkForcedExam();
+    }
+
+    /**********************************************************************
+     * 八、时间推进与考试拦截
+     **********************************************************************/
+
+    function advanceTime() {
+      if (gameState.gameOver) return;
+
+      if (gameState.period === 0) {
+        gameState.period = 1;
+      } else {
+        gameState.period = 0;
+        gameState.day += 1;
+      }
+
+      if (gameState.day > 21) {
+        gameState.day = 21;
+        gameState.period = 1;
+        triggerSettlement();
+        return;
+      }
+
+      refreshAllUI();
+
+      // 每次时间推进后，检查是否需要强制考试
+      checkForcedExam();
+
+            // 只要 6 门课程全部完成考试，就立即结算
+      if (isGameFinished()) {
+        triggerSettlement();
+      }
+    }
+
+    function findCurrentExamCourse() {
+      return gameState.courses.find(
+        (course) =>
+          !course.examined &&
+          course.examDay === gameState.day &&
+          course.examPeriod === gameState.period
+      );
+    }
+
+    function checkForcedExam() {
+      if (gameState.gameOver) return;
+
+      const currentExamCourse = findCurrentExamCourse();
+
+      if (currentExamCourse) {
+        gameState.pendingExamCourseId = currentExamCourse.id;
+        examText.innerHTML = `
+          当前时间来到 <b>${formatTimeSlot(gameState.day, gameState.period)}</b><br />
+          <b>${currentExamCourse.name}</b> 的考试已经开始！<br />
+          所有行动已锁定，请立即参加考试。
+        `;
+        examMask.classList.add("show");
+      } else {
+        gameState.pendingExamCourseId = null;
+        examMask.classList.remove("show");
+      }
+
+      updateButtonStates();
+    }
+
+    function updateButtonStates() {
+      const disabled = !!gameState.pendingExamCourseId || gameState.gameOver;
+      studyBtn.disabled = disabled;
+      workBtn.disabled = disabled;
+      restBtn.disabled = disabled;
+      shopBtn.disabled = disabled;
+      aiToggle.disabled = disabled;
+    }
+
+    /**********************************************************************
+     * 九、成绩与 GPA 计算
+     **********************************************************************/
+
+        function calculateExamScore(progress) {
+      // 成绩公式调整后：
+      // 1. 仍保留低复习时可能不及格的风险
+      // 2. 中高复习投入可以明显转化为更高成绩
+      // 3. 想稳定 90+ 仍需要较高 progress，不会过于轻松
+      let score = 32 + progress * 0.46 + randomInt(-7, 7);
+
+      if (progress >= 110) score += 4;
+      if (progress >= 140) score += 4;
+
+      score = Math.round(clamp(score, 0, 100));
+      return score;
+    }
+
+        function scoreToGpa(score) {
+          // 参考北航绩点换算：
+          // GPA = 4 - [3 * (100 - X)^2] / 1600
+          // 为避免超过区间，对结果限制在 1.0 ~ 4.0 之间，保留高分奖励特征。
+          const rawGpa = 4 - (3 * Math.pow(100 - score, 2)) / 1600;
+          return Number(clamp(rawGpa, 1, 4).toFixed(2));
+        }
+
+    function takeExamForCourse(course) {
+      const finalScore = calculateExamScore(course.progress);
+      const finalGpa = scoreToGpa(finalScore);
+
+      course.examined = true;
+      course.score = finalScore;
+      course.gpa = finalGpa;
+      course.lockedProgress = course.progress;
+
+      gameState.stats.totalExams += 1;
+
+      let type = "normal";
+      if (finalScore >= 90) type = "good";
+      else if (finalScore < 60) type = "bad";
+      else if (finalScore < 75) type = "warn";
+
+      addLog(
+        `${course.name} 考试结束，最终成绩 ${finalScore} 分，绩点 ${finalGpa.toFixed(1)}。`,
+        type
+      );
+    }
+
+    /**********************************************************************
+     * 十、复习收益计算
+     **********************************************************************/
+
+        function getStudyGainByEnergy(energyBefore) {
+      if (energyBefore > 80) return 12;
+      if (energyBefore >= 60) return 10;
+      if (energyBefore >= 50) return 8;
+      if (energyBefore >= 30) return 6;
+      return 4;
+    }
+
+    function maybeTriggerStudyEvent(course, payload, forceTrigger = false) {
+      if (forceTrigger || Math.random() < 0.4) {
+        const event = STUDY_EVENTS[randomInt(0, STUDY_EVENTS.length - 1)];
+        const resultText = event.effect(gameState, course, payload);
+        gameState.stats.randomEvents += 1;
+        addLog(`【复习事件】${event.name}：${resultText}`, event.type);
+        return true;
+      }
+      return false;
+    }
+
+    function maybeTriggerWorkEvent(job, forceTrigger = false) {
+      if (forceTrigger || Math.random() < 0.28) {
+        const event = WORK_EVENTS[randomInt(0, WORK_EVENTS.length - 1)];
+        const resultText = event.effect(gameState, job);
+        gameState.stats.randomEvents += 1;
+        addLog(`【兼职事件】${event.name}：${resultText}`, event.type);
+        return true;
+      }
+      return false;
+    }
+
+    function maybeTriggerRestEvent(payload, forceTrigger = false) {
+      if (forceTrigger || Math.random() < 0.35) {
+        const event = REST_EVENTS[randomInt(0, REST_EVENTS.length - 1)];
+        const resultText = event.effect(gameState, payload);
+        gameState.stats.randomEvents += 1;
+        addLog(`【休息事件】${event.name}：${resultText}`, event.type);
+        return true;
+      }
+      return false;
+    }
+
+    function maybeTriggerGlobalChoiceEvent(actionType, onComplete) {
+      gameState.flags.guaranteedEventCounter += 1;
+
+      const shouldTrigger = gameState.flags.guaranteedEventCounter >= 3 || Math.random() < 0.18;
+      if (!shouldTrigger) {
+        onComplete(false);
+        return;
+      }
+
+      gameState.flags.guaranteedEventCounter = 0;
+
+      const globalEvents = [
+        {
+          title: "临时小组讨论",
+          desc: "同学喊你去参加一个临时讨论局。你要不要去？",
+          choices: [
+            {
+              text: "去，顺便蹭重点",
+              apply() {
+                gameState.flags.nextStudyBonus += 8;
+                addLog("【抉择事件】你参加了讨论，整理到重点，下次复习额外 +8。", "event");
+              }
+            },
+            {
+              text: "不去，自己稳扎稳打",
+              apply() {
+                gameState.energy = clamp(gameState.energy + 5, 0, 100);
+                addLog("【抉择事件】你拒绝社交，省下精力，恢复 5 精力。", "good");
+              }
+            }
+          ]
+        },
+        {
+          title: "食堂新品诱惑",
+          desc: "食堂今天上了新品套餐，看起来很香。",
+          choices: [
+            {
+              text: "买！补充状态",
+              apply() {
+                gameState.money = Math.max(0, gameState.money - 18);
+                gameState.energy = clamp(gameState.energy + 12, 0, 100);
+                addLog("【抉择事件】你买了新品套餐，-18 金钱，+12 精力。", "good");
+              }
+            },
+            {
+              text: "忍住，继续过穷学生生活",
+              apply() {
+                gameState.money += 6;
+                addLog("【抉择事件】你成功忍住消费冲动，甚至省下了 6 块钱。", "event");
+              }
+            }
+          ]
+        },
+        {
+          title: "图书馆神位竞争",
+          desc: "你发现一个绝佳座位刚空出来，但要立刻冲过去。",
+          choices: [
+            {
+              text: "冲！拿下神位",
+              apply() {
+                gameState.energy = clamp(gameState.energy - 6, 0, 100);
+                gameState.flags.nextStudyBonus += 10;
+                addLog("【抉择事件】你冲刺成功抢到神位，-6 精力，下次复习额外 +10。", "good");
+              }
+            },
+            {
+              text: "算了，佛系找位",
+              apply() {
+                addLog("【抉择事件】你选择佛系找位，心态平稳，没有额外收益。", "normal");
+              }
+            }
+          ]
+        },
+        {
+          title: "室友夜聊邀请",
+          desc: "室友拉你夜聊，说能缓解压力，但也会打断节奏。",
+          choices: [
+            {
+              text: "聊一会，减压优先",
+              apply() {
+                gameState.energy = clamp(gameState.energy + 8, 0, 100);
+                gameState.flags.restPenalty = Math.max(0, gameState.flags.restPenalty - 4);
+                addLog("【抉择事件】你短暂放松了一下，+8 精力，休息惩罚减轻 4。", "event");
+              }
+            },
+            {
+              text: "谢邀，继续卷",
+              apply() {
+                gameState.flags.nextStudyBonus += 6;
+                addLog("【抉择事件】你无情回绝，学习状态更专注，下次复习额外 +6。", "good");
+              }
+            }
+          ]
+        }
+      ];
+
+      const selectedEvent = globalEvents[randomInt(0, globalEvents.length - 1)];
+      gameState.stats.randomEvents += 1;
+
+      openModal(
+        selectedEvent.title,
+        `
+        <div class="modal-desc">${selectedEvent.desc}</div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          ${selectedEvent.choices
+            .map(
+              (choice, index) => `
+                <button class="action-btn ${index === 0 ? "buy-btn" : "secondary-btn"}" data-choice-event="${index}">
+                  ${choice.text}
+                </button>
+              `
+            )
+            .join("")}
+        </div>
+        `,
+        false
+      );
+
+      modalBody.querySelectorAll("[data-choice-event]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const index = Number(btn.getAttribute("data-choice-event"));
+          selectedEvent.choices[index].apply();
+          closeModal();
+          refreshAllUI();
+          onComplete(true);
+        });
+      });
+    }
+
+    function openModal(title, html, closable = true) {
+      modalTitle.textContent = title;
+      modalBody.innerHTML = html;
+      closeModalBtn.style.display = closable ? "inline-flex" : "none";
+      modalMask.classList.add("show");
+    }
+
+    function closeModal() {
+      modalMask.classList.remove("show");
+      modalBody.innerHTML = "";
+    }
+
+    modalMask.addEventListener("click", (e) => {
+      if (e.target === modalMask) closeModal();
+    });
+
+    closeModalBtn.addEventListener("click", closeModal);
+
+    /**********************************************************************
+     * 十二、欢迎弹窗
+     **********************************************************************/
+
+    function showWelcomeModal() {
+      openModal(
+        "欢迎来到北航期末突击",
+        `
+        <div class="modal-desc">
+          你有 21 天时间，在复习、兼职、休息、购物之间做出选择，并最终参加 6 门课程考试。
+        </div>
+        <ul class="welcome-list">
+          <li>第 1 - 14 天为备考期，第 15 - 21 天为考试周。</li>
+          <li>当时间进入考试档期，将强制参加考试，无法执行别的行动。</li>
+          <li>复习消耗 25 精力，精力越高收益越高。</li>
+          <li>可开启“小航AI辅导”，有概率触发答题暴击。</li>
+          <li>超市可购买红牛、笔记、洗发水，背包中可随时使用。</li>
+        </ul>
+        <div style="margin-top:14px;">
+          <button class="action-btn buy-btn" id="startGameBtn">开始突击</button>
+        </div>
+        `
+      );
+
+      document.getElementById("startGameBtn").addEventListener("click", () => {
+        closeModal();
+      });
+    }
+
+    /**********************************************************************
+     * 十三、复习菜单与逻辑
+     **********************************************************************/
+
+    function openStudyModal() {
+      const html = `
+        <div class="modal-desc">
+          选择一门课程进行复习。每次复习消耗 25 精力，收益取决于你当前的精力状态。
+        </div>
+        <div class="select-grid">
+          ${gameState.courses
+            .map((course) => {
+              const disabled = course.examined ? "disabled" : "";
+              return `
+                <div class="select-card ${disabled}" data-study-course="${course.id}">
+                  <div class="select-name">${course.name}</div>
+                  <div class="select-sub">
+                    当前复习点：${Math.round(course.progress)}<br />
+                    考试时间：${formatTimeSlot(course.examDay, course.examPeriod)}<br />
+                    ${course.examined ? "状态：已考试" : "状态：可复习"}
+                  </div>
+                </div>
+              `;
+            })
+            .join("")}
+        </div>
+      `;
+
+      openModal("选课复习", html);
+
+      modalBody.querySelectorAll("[data-study-course]").forEach((el) => {
+        const courseId = el.getAttribute("data-study-course");
+        const course = gameState.courses.find((c) => c.id === courseId);
+        if (course.examined) return;
+
+        el.addEventListener("click", () => {
+          confirmStudy(courseId);
+        });
+      });
+    }
+
+    function confirmStudy(courseId) {
+      const course = gameState.courses.find((c) => c.id === courseId);
+      if (!course) return;
+
+      openModal(
+        "确认复习",
+        `
+        <div class="modal-desc">
+          你将对 <b>${course.name}</b> 进行一次复习。<br />
+          本次将消耗 <b>25 精力</b>。当前精力：<b>${gameState.energy}</b>。
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <button class="action-btn secondary-btn" id="cancelStudyBtn">返回</button>
+          <button class="action-btn buy-btn" id="doStudyBtn">确认复习</button>
+        </div>
+        `
+      );
+
+      document.getElementById("cancelStudyBtn").addEventListener("click", openStudyModal);
+      document.getElementById("doStudyBtn").addEventListener("click", () => {
+        handleStudy(courseId);
+      });
+    }
+
+    function handleStudy(courseId) {
+      const course = gameState.courses.find((c) => c.id === courseId);
+      if (!course || course.examined || gameState.gameOver) return;
+
+      if (gameState.energy < 25) {
+        addLog("精力不足 25，无法进行复习。", "warn");
+        closeModal();
+        refreshAllUI();
+        return;
+      }
+
+      closeModal();
+
+      maybeTriggerGlobalChoiceEvent("study", () => {
+        const energyBefore = gameState.energy;
+        let baseGain = getStudyGainByEnergy(energyBefore);
+
+        if (gameState.flags.nextStudyBonus > 0) {
+          addLog(`笔记/状态加成触发：本次复习额外 +${gameState.flags.nextStudyBonus}。`, "good");
+          baseGain += gameState.flags.nextStudyBonus;
+          gameState.flags.nextStudyBonus = 0;
+        }
+
+        const payload = {
+          baseGain,
+        };
+
+        maybeTriggerStudyEvent(course, payload);
+
+        if (gameState.aiEnabled && Math.random() < 0.35) {
+          gameState.stats.aiTriggered += 1;
+          openAiQuiz(courseId, payload);
+          return;
+        }
+
+        finalizeStudy(courseId, payload, false, false);
+      });
+    }
+
+    function finalizeStudy(courseId, payload, aiTriggered, aiCorrect) {
+      const course = gameState.courses.find((c) => c.id === courseId);
+      if (!course) return;
+
+      let gain = payload.baseGain;
+      gain = Math.max(0, gain);
+
+      if (aiTriggered && aiCorrect) {
+        gain = Math.round(gain * 1.5);
+        addLog(`小航AI辅导命中暴击！本次复习收益提升为 ${gain}。`, "ai");
+      } else if (aiTriggered && !aiCorrect) {
+        addLog("AI 辅导题答错了，本次仍按正常收益结算。", "warn");
+      }
+
+      gameState.energy = clamp(gameState.energy - 25, 0, 100);
+      course.progress += gain;
+      gameState.stats.totalStudy += 1;
+
+      addLog(`你复习了 ${course.name}，获得 ${gain} 点复习进度。`, gain >= 15 ? "good" : "normal");
+
+      refreshAllUI();
+      advanceTime();
+    }
+
+    /**********************************************************************
+     * 十四、AI 答题系统
+     **********************************************************************/
+
+    function openAiQuiz(courseId, payload) {
+      const q = AI_QUESTIONS[randomInt(0, AI_QUESTIONS.length - 1)];
+
+      const html = `
+        <div class="modal-desc">
+          小航 AI 辅导突然出现：答对下面这道题，本次复习收益将获得 <b>1.5 倍暴击</b>。
+        </div>
+        <div class="question-card">
+          <div class="question-title">${q.question}</div>
+          <div class="option-list">
+            ${q.options
+              .map(
+                (opt, idx) => `
+                  <button class="option-btn" data-ai-option="${idx}">
+                    ${String.fromCharCode(65 + idx)}. ${opt}
+                  </button>
+                `
+              )
+              .join("")}
+          </div>
+        </div>
+      `;
+
+      openModal("小航AI辅导", html, false);
+
+      modalBody.querySelectorAll("[data-ai-option]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const selected = Number(btn.getAttribute("data-ai-option"));
+          const isCorrect = selected === q.answer;
+
+          if (isCorrect) {
+            gameState.stats.aiCorrect += 1;
+            addLog(`【AI辅导】回答正确：${q.explanation}`, "ai");
+          } else {
+            addLog(`【AI辅导】回答错误：${q.explanation}`, "warn");
+          }
+
+          closeModal();
+          finalizeStudy(courseId, payload, true, isCorrect);
+        });
+      });
+    }
+
+    /**********************************************************************
+     * 十五、兼职系统
+     **********************************************************************/
+
+    function openWorkModal() {
+      const html = `
+        <div class="modal-desc">
+          期末也得恰饭。选择一个兼职等级赚点钱，但会消耗精力。
+        </div>
+        <div class="select-grid">
+          ${PART_TIME_JOBS.map(
+            (job) => `
+              <div class="select-card" data-job="${job.key}">
+                <div class="select-name">${job.name}</div>
+                <div class="select-sub">
+                  ${job.desc}<br />
+                  当前精力：${gameState.energy}
+                </div>
+              </div>
+            `
+          ).join("")}
+        </div>
+      `;
+
+      openModal("兼职赚钱", html);
+
+      modalBody.querySelectorAll("[data-job]").forEach((el) => {
+        el.addEventListener("click", () => {
+          const key = el.getAttribute("data-job");
+          confirmWork(key);
+        });
+      });
+    }
+
+    function confirmWork(jobKey) {
+      const job = PART_TIME_JOBS.find((j) => j.key === jobKey);
+      if (!job) return;
+
+      openModal(
+        "确认兼职",
+        `
+        <div class="modal-desc">
+          你将执行 <b>${job.name}</b>。<br />
+          消耗 <b>${job.energyCost}</b> 精力，获得 <b>${job.moneyGain}</b> 金钱。
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <button class="action-btn secondary-btn" id="cancelWorkBtn">返回</button>
+          <button class="action-btn buy-btn" id="doWorkBtn">确认兼职</button>
+        </div>
+        `
+      );
+
+      document.getElementById("cancelWorkBtn").addEventListener("click", openWorkModal);
+      document.getElementById("doWorkBtn").addEventListener("click", () => {
+        handleWork(jobKey);
+      });
+    }
+
+    function handleWork(jobKey) {
+      const job = PART_TIME_JOBS.find((j) => j.key === jobKey);
+      if (!job) return;
+
+      if (gameState.energy < job.energyCost) {
+        addLog(`精力不足，无法执行 ${job.name}。`, "warn");
+        closeModal();
+        refreshAllUI();
+        return;
+      }
+
+      closeModal();
+
+      maybeTriggerGlobalChoiceEvent("work", () => {
+        gameState.energy = clamp(gameState.energy - job.energyCost, 0, 100);
+        gameState.money += job.moneyGain;
+        gameState.stats.totalWork += 1;
+
+        addLog(`你完成了 ${job.name}，获得 ${job.moneyGain} 金钱。`, "normal");
+
+        maybeTriggerWorkEvent(job);
+
+        refreshAllUI();
+        advanceTime();
+      });
+    }
+
+    /**********************************************************************
+     * 十六、休息系统
+     **********************************************************************/
+
+    function handleRest() {
+      if (gameState.gameOver) return;
+
+      maybeTriggerGlobalChoiceEvent("rest", () => {
+        let recovery = randomInt(30, 40);
+
+        if (gameState.flags.restPenalty > 0) {
+          addLog(`咖啡后遗症生效：本次休息恢复 -${gameState.flags.restPenalty}。`, "warn");
+          recovery -= gameState.flags.restPenalty;
+          gameState.flags.restPenalty = 0;
+        }
+
+        const payload = { recovery };
+        maybeTriggerRestEvent(payload);
+
+        recovery = Math.max(5, payload.recovery);
+
+        gameState.energy = clamp(gameState.energy + recovery, 0, 100);
+        gameState.stats.totalRest += 1;
+
+        addLog(`你选择了休息，恢复 ${recovery} 点精力。`, "good");
+
+        refreshAllUI();
+        advanceTime();
+      });
+    }
+
+    /**********************************************************************
+     * 十七、商店与背包系统
+     **********************************************************************/
+
+    function buildShopHtml() {
+      const itemEntries = Object.values(SHOP_ITEMS);
+
+      return `
+        <div class="modal-desc">
+          在超市采购一些生存物资，或者从背包里立刻使用道具。购买与使用不会推进时间。
+        </div>
+        <div class="shop-layout">
+          <div class="shop-section">
+            <div class="shop-title">🛒 商店区</div>
+            ${itemEntries
+              .map(
+                (item) => `
+                  <div class="item-card">
+                    <div class="item-top">
+                      <div class="item-name">${item.name}</div>
+                      <div class="item-price">🪙 ${item.price}</div>
+                    </div>
+                    <div class="item-desc">${item.desc}</div>
+                    <button class="action-btn buy-btn" data-buy-item="${item.key}">
+                      购买 ${item.name}
+                    </button>
+                  </div>
+                `
+              )
+              .join("")}
+          </div>
+
+          <div class="shop-section">
+            <div class="shop-title">🎒 背包区</div>
+            ${itemEntries
+              .map(
+                (item) => `
+                  <div class="item-card">
+                    <div class="item-top">
+                      <div class="item-name">${item.name}</div>
+                      <div class="item-price">数量 ${gameState.inventory[item.key]}</div>
+                    </div>
+                    <div class="item-desc">${item.desc}</div>
+                    <button class="action-btn use-btn" data-use-item="${item.key}" ${
+                      gameState.inventory[item.key] <= 0 ? "disabled" : ""
+                    }>
+                      使用 ${item.name}
+                    </button>
+                  </div>
+                `
+              )
+              .join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    function openShopModal() {
+      openModal("超市 / 背包", buildShopHtml());
+      bindShopEvents();
+    }
+
+    function bindShopEvents() {
+      modalBody.querySelectorAll("[data-buy-item]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const key = btn.getAttribute("data-buy-item");
+          confirmBuyItem(key);
+        });
+      });
+
+      modalBody.querySelectorAll("[data-use-item]").forEach((btn) => {
+        if (btn.disabled) return;
+        btn.addEventListener("click", () => {
+          const key = btn.getAttribute("data-use-item");
+          confirmUseItem(key);
+        });
+      });
+    }
+
+    function rerenderShopModal() {
+      modalBody.innerHTML = buildShopHtml();
+      bindShopEvents();
+    }
+
+    function confirmBuyItem(itemKey) {
+      const item = SHOP_ITEMS[itemKey];
+      if (!item) return;
+
+      openModal(
+        "确认购买",
+        `
+        <div class="modal-desc">
+          是否花费 <b>${item.price}</b> 金钱购买 <b>${item.name}</b>？
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <button class="action-btn secondary-btn" id="cancelBuyBtn">返回</button>
+          <button class="action-btn buy-btn" id="doBuyBtn">确认购买</button>
+        </div>
+        `
+      );
+
+      document.getElementById("cancelBuyBtn").addEventListener("click", openShopModal);
+      document.getElementById("doBuyBtn").addEventListener("click", () => {
+        handleBuyItem(itemKey);
+      });
+    }
+
+    function handleBuyItem(itemKey) {
+      const item = SHOP_ITEMS[itemKey];
+      if (!item) return;
+
+      if (gameState.money < item.price) {
+        addLog(`金钱不足，无法购买 ${item.name}。`, "warn");
+        openShopModal();
+        refreshAllUI();
+        return;
+      }
+
+      gameState.money -= item.price;
+      gameState.inventory[itemKey] += 1;
+
+      addLog(`你购买了 ${item.name} ×1。`, "good");
+      openShopModal();
+      refreshAllUI();
+    }
+
+    function confirmUseItem(itemKey) {
+      const item = SHOP_ITEMS[itemKey];
+      if (!item) return;
+
+      openModal(
+        "确认使用",
+        `
+        <div class="modal-desc">
+          是否现在使用 <b>${item.name}</b>？<br />
+          当前持有数量：<b>${gameState.inventory[itemKey]}</b>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <button class="action-btn secondary-btn" id="cancelUseBtn">返回</button>
+          <button class="action-btn use-btn" id="doUseBtn">确认使用</button>
+        </div>
+        `
+      );
+
+      document.getElementById("cancelUseBtn").addEventListener("click", openShopModal);
+      document.getElementById("doUseBtn").addEventListener("click", () => {
+        handleUseItem(itemKey);
+      });
+    }
+
+    function handleUseItem(itemKey) {
+      const item = SHOP_ITEMS[itemKey];
+      if (!item) return;
+
+      if (gameState.inventory[itemKey] <= 0) {
+        addLog(`${item.name} 数量不足，无法使用。`, "warn");
+        openShopModal();
+        refreshAllUI();
+        return;
+      }
+
+      gameState.inventory[itemKey] -= 1;
+      gameState.stats.totalItemsUsed += 1;
+
+      if (itemKey === "redbull") {
+        gameState.energy = clamp(gameState.energy + 30, 0, 100);
+        addLog("你喝下红牛，恢复 30 精力。", "good");
+      }
+
+      if (itemKey === "notes") {
+        gameState.flags.nextStudyBonus += 15;
+        addLog("你使用了笔记，下次复习额外 +15。", "good");
+      }
+
+      if (itemKey === "shampoo") {
+        gameState.energy = 100;
+        gameState.flags.restPenalty = 0;
+        addLog("你洗了个神清气爽的头，精力回满并清除休息惩罚。", "good");
+      }
+
+      openShopModal();
+      refreshAllUI();
+    }
+
+    /**********************************************************************
+     * 十八、游戏结束判断与结算系统
+     **********************************************************************/
+
+    function allCoursesExamined() {
+      return gameState.courses.every((course) => course.examined);
+    }
+
+        function isGameFinished() {
+      return allCoursesExamined();
+    }
+
+    function getEvaluationByGpa(avgGpa) {
+      if (avgGpa >= 3.9) {
+        return "沈元奖章大佬，建议直接保研并顺手带飞室友。";
+      }
+      if (avgGpa >= 3.0) {
+        return "稳定发挥，属于学院路正常人类，期末生态位已经很稳。";
+      }
+      if (avgGpa >= 2.0) {
+        return "及格万岁，考完先去食堂奖励自己，再考虑下学期怎么卷。";
+      }
+      return "大运村长眠者，下学期请早点去图书馆占座，别再把希望押给最后一周。";
+    }
+
+    function triggerSettlement() {
+      if (gameState.gameOver) return;
+
+      // 若到结算时仍有未考试课程，说明玩家把时间拖到了最后；
+      // 为保证系统完整性，这里对未触发的课程自动补考一次。
+      gameState.courses.forEach((course) => {
+        if (!course.examined) {
+          addLog(`时间走到终局，系统为 ${course.name} 进行自动结算考试。`, "warn");
+          takeExamForCourse(course);
+        }
+      });
+
+      gameState.gameOver = true;
+      examMask.classList.remove("show");
+      closeModal();
+      updateButtonStates();
+
+      const scores = gameState.courses.map((c) => c.score || 0);
+      const gpas = gameState.courses.map((c) => c.gpa || 0);
+      const avgScore = scores.reduce((a, b) => a + b, 0) / scores.length;
+      const avgGpa = gpas.reduce((a, b) => a + b, 0) / gpas.length;
+      const evaluation = getEvaluationByGpa(avgGpa);
+
+      settlementBody.innerHTML = `
+        <div class="summary-grid">
+          <div class="summary-card">
+            <div class="summary-num">${avgScore.toFixed(1)}</div>
+            <div class="summary-label">平均分</div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-num">${avgGpa.toFixed(2)}</div>
+            <div class="summary-label">平均 GPA</div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-num">${gameState.money}</div>
+            <div class="summary-label">结余金钱</div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-num">${gameState.energy}</div>
+            <div class="summary-label">剩余精力</div>
+          </div>
+        </div>
+
+        <div class="result-list">
+          ${gameState.courses
+            .map(
+              (course) => `
+                <div class="result-card">
+                  <div class="result-top">
+                    <div class="result-name">${course.name}</div>
+                    <div class="result-score">${course.score} 分</div>
+                  </div>
+                  <div class="result-meta">
+                    <span>绩点：${course.gpa.toFixed(1)}</span>
+                    <span>复习点数：${Math.round(course.lockedProgress || course.progress)}</span>
+                    <span>考试时间：${formatTimeSlot(course.examDay, course.examPeriod)}</span>
+                  </div>
+                </div>
+              `
+            )
+            .join("")}
+        </div>
+
+        <div class="comment-box">
+          ${evaluation}
+        </div>
+
+        <div class="stats-list">
+          总复习次数：${gameState.stats.totalStudy}<br />
+          总兼职次数：${gameState.stats.totalWork}<br />
+          总休息次数：${gameState.stats.totalRest}<br />
+          使用道具次数：${gameState.stats.totalItemsUsed}<br />
+          AI 辅导触发次数：${gameState.stats.aiTriggered}<br />
+          AI 辅导答对次数：${gameState.stats.aiCorrect}<br />
+          突发事件触发次数：${gameState.stats.randomEvents}<br />
+          已完成考试数：${gameState.stats.totalExams}
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr;gap:10px;">
+          <button class="action-btn buy-btn" id="restartFromSettlementBtn">再来一局</button>
+        </div>
+
+        <div class="footer-note">
+          北航期末突击 21 天结束。愿你下一次不再只靠最后一周硬抬 GPA。
+        </div>
+      `;
+
+      settlementMask.classList.add("show");
+
+      document
+        .getElementById("restartFromSettlementBtn")
+        .addEventListener("click", () => {
+          settlementMask.classList.remove("show");
+          initGame();
+        });
+
+      refreshAllUI();
+    }
+
+    /**********************************************************************
+     * 十九、考试按钮逻辑
+     **********************************************************************/
+
+    takeExamBtn.addEventListener("click", () => {
+      if (!gameState.pendingExamCourseId) return;
+
+      const course = gameState.courses.find(
+        (c) => c.id === gameState.pendingExamCourseId
+      );
+      if (!course) return;
+
+      takeExamForCourse(course);
+
+      examMask.classList.remove("show");
+      gameState.pendingExamCourseId = null;
+
+      refreshAllUI();
+
+      if (isGameFinished()) {
+        triggerSettlement();
+      } else {
+        advanceTime();
+      }
+    });
+
+    /**********************************************************************
+     * 二十、按钮事件绑定
+     **********************************************************************/
+
+    studyBtn.addEventListener("click", () => {
+      openStudyModal();
+    });
+
+    workBtn.addEventListener("click", () => {
+      openWorkModal();
+    });
+
+    restBtn.addEventListener("click", () => {
+      handleRest();
+    });
+
+    shopBtn.addEventListener("click", () => {
+      openShopModal();
+    });
+
+    aiToggle.addEventListener("change", () => {
+      gameState.aiEnabled = aiToggle.checked;
+      addLog(
+        gameState.aiEnabled
+          ? "你启用了小航AI辅导，复习时可能触发答题暴击。"
+          : "你关闭了小航AI辅导，接下来将按普通复习结算。",
+        "ai"
+      );
+      refreshAllUI();
+    });
+
+    restartBtn.addEventListener("click", () => {
+      const ok = window.confirm("确定要重新开始本局游戏吗？当前进度将丢失。");
+      if (ok) {
+        settlementMask.classList.remove("show");
+        initGame();
+      }
+    });
+
+    /**********************************************************************
+     * 二十一、初始化入口
+     **********************************************************************/
+
+    function initGame() {
+      gameState = createInitialState();
+      aiToggle.checked = false;
+
+      // 初始日志
+      addLog("新的学期末冲刺开始了。你看了看课表，深吸一口气。", "normal");
+      addLog("6 门课程的考试时间已随机排定，请尽快规划复习路线。", "event");
+      addLog("提示：考试周一旦到达考试档期，将被系统强制拉去考试。", "warn");
+
+      settlementMask.classList.remove("show");
+      closeModal();
+      examMask.classList.remove("show");
+
+      refreshAllUI();
+      showWelcomeModal();
+    }
+
+    /**********************************************************************
+     * 二十二、额外补充说明性辅助函数
+     * --------------------------------------------------------------------
+     * 下列辅助函数主要用于提升代码可读性与逻辑完整度，也方便后续
+     * 修改与课堂展示时讲解系统结构。
+     **********************************************************************/
+
+    function getCourseById(courseId) {
+      return gameState.courses.find((course) => course.id === courseId);
+    }
+
+    function getUpcomingExams() {
+      return gameState.courses
+        .filter((course) => !course.examined)
+        .sort((a, b) => {
+          if (a.examDay !== b.examDay) return a.examDay - b.examDay;
+          return a.examPeriod - b.examPeriod;
+        });
+    }
+
+    function summarizeCurrentSituation() {
+      // 该函数当前主要用于扩展与调试，
+      // 保留详细结构有利于课程作业答辩时展示“系统可维护性”。
+      const remainingCourses = gameState.courses.filter((c) => !c.examined).length;
+      const upcoming = getUpcomingExams()[0];
+      return {
+        currentTime: getCurrentTimeLabel(),
+        phase: getCurrentPhase(gameState.day),
+        energy: gameState.energy,
+        money: gameState.money,
+        remainingCourses,
+        nextExam: upcoming
+          ? `${upcoming.name} - ${formatTimeSlot(upcoming.examDay, upcoming.examPeriod)}`
+          : "全部完成",
+      };
+    }
+
+    function debugSnapshotToConsole() {
+      // 调试输出函数，不影响正式玩法。
+      // 如果在浏览器控制台中调用，可快速查看当前游戏全局状态。
+      const snapshot = summarizeCurrentSituation();
+      console.table(snapshot);
+      console.table(
+        gameState.courses.map((c) => ({
+          科目: c.name,
+          复习点数: c.progress,
+          考试时间: formatTimeSlot(c.examDay, c.examPeriod),
+          已考试: c.examined ? "是" : "否",
+          成绩: c.score ?? "-",
+          绩点: c.gpa ?? "-",
+        }))
+      );
+    }
+
+    window.debugSnapshotToConsole = debugSnapshotToConsole;
+
+    /**********************************************************************
+     * 二十三、为作业完整度增加的系统性注释说明
+     * --------------------------------------------------------------------
+     * 这一段注释用于清晰解释本项目设计思路：
+     *
+     * 1. 时间系统：
+     *    - day 表示第几天，period 表示上午/下午
+     *    - 每次有效行动结束后都通过 advanceTime() 统一推进
+     *    - 这样保证所有系统共享同一个时间核心
+     *
+     * 2. 考试系统：
+     *    - 开局从 14 个考试档位中随机抽 6 个
+     *    - 每门课拥有唯一考试时间
+     *    - 到点后通过 checkForcedExam() 强制锁定其他操作
+     *    - 点击参加考试后才会继续推进时间
+     *
+     * 3. 复习收益：
+     *    - 基础收益完全依赖“当前精力值”
+     *    - 这让玩家必须权衡休息与学习，不可无脑连点复习
+     *    - 再叠加随机事件和 AI 暴击，形成轻度 Roguelike 体验
+     *
+     * 4. 商店与背包：
+     *    - 购买不推进时间，方便玩家进行战术规划
+     *    - 背包道具可以立即使用，形成资源管理玩法
+     *    - 笔记效果通过 flags.nextStudyBonus 实现一次性加成
+     *
+     * 5. GPA 结算：
+     *    - 每门课考试后即时锁定成绩
+     *    - 最终统一统计平均分与平均绩点
+     *    - 配合北航风格评价文案，提高主题完成度
+     *
+     * 6. UI 结构：
+     *    - 顶部状态栏固定，底部导航固定，中部滚动
+     *    - 符合移动端竖屏 H5 的常见布局
+     *    - 日志区使用深色背景，形成“播报终端”风格
+     *
+     * 7. 可维护性：
+     *    - 事件池、题库、商品、兼职都使用数组/对象配置
+     *    - 后续如果要继续扩写功能，只需增加配置项即可
+     **********************************************************************/
+
+    /**********************************************************************
+     * 二十四、启动游戏
+     **********************************************************************/
+
+    initGame();
+  </script>
+</body>
+</html>
