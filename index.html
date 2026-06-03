@@ -1635,18 +1635,18 @@
      **********************************************************************/
 
         function calculateExamScore(progress) {
-      // 成绩公式调整后：
-      // 1. 仍保留低复习时可能不及格的风险
-      // 2. 中高复习投入可以明显转化为更高成绩
-      // 3. 想稳定 90+ 仍需要较高 progress，不会过于轻松
-      let score = 32 + progress * 0.46 + randomInt(-7, 7);
+          // 成绩公式调整后：
+          // 1. 仍保留低复习时可能不及格的风险
+          // 2. 中高复习投入可以明显转化为更高成绩
+          // 3. 想稳定 90+ 仍需要较高 progress，但门槛比上一版略松
+          let score = 34 + progress * 0.46 + randomInt(-7, 7);
 
-      if (progress >= 110) score += 4;
-      if (progress >= 140) score += 4;
+          if (progress >= 110) score += 4;
+          if (progress >= 140) score += 4;
 
-      score = Math.round(clamp(score, 0, 100));
-      return score;
-    }
+          score = Math.round(clamp(score, 0, 100));
+          return score;
+        }
 
         function scoreToGpa(score) {
           // 参考北航绩点换算：
@@ -1874,30 +1874,69 @@
      * 十二、欢迎弹窗
      **********************************************************************/
 
-    function showWelcomeModal() {
-      openModal(
-        "欢迎来到北航期末突击",
-        `
-        <div class="modal-desc">
-          你有 21 天时间，在复习、兼职、休息、购物之间做出选择，并最终参加 6 门课程考试。
-        </div>
-        <ul class="welcome-list">
-          <li>第 1 - 14 天为备考期，第 15 - 21 天为考试周。</li>
-          <li>当时间进入考试档期，将强制参加考试，无法执行别的行动。</li>
-          <li>复习消耗 25 精力，精力越高收益越高。</li>
-          <li>可开启“小航AI辅导”，有概率触发答题暴击。</li>
-          <li>超市可购买红牛、笔记、洗发水，背包中可随时使用。</li>
-        </ul>
-        <div style="margin-top:14px;">
-          <button class="action-btn buy-btn" id="startGameBtn">开始突击</button>
-        </div>
-        `
-      );
+        function showWelcomeModal() {
+          openModal(
+            "欢迎来到北航期末突击",
+            `
+            <div class="modal-desc">
+              你将扮演一名正在北航期末周边缘挣扎的学生。在有限的 21 天里，你需要在复习、兼职、休息和购物之间做取舍，尽量把 6 门课安全送上考场并争取更高成绩。
+            </div>
+            <ul class="welcome-list">
+              <li>第 1 - 14 天为备考期，第 15 - 21 天为考试周。</li>
+              <li>一旦时间进入某门课考试档期，会被系统强制拉去考试。</li>
+              <li>你需要在有限行动回合里平衡精力、金钱和复习节奏。</li>
+              <li>6 门课程全部完成考试后，游戏立即结束并进入 GPA 结算。</li>
+            </ul>
+            <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+              <button class="action-btn secondary-btn" id="skipIntroBtn">直接开始</button>
+              <button class="action-btn buy-btn" id="nextIntroBtn">下一页</button>
+            </div>
+            `,
+            false
+          );
 
-      document.getElementById("startGameBtn").addEventListener("click", () => {
-        closeModal();
-      });
-    }
+          document.getElementById("skipIntroBtn").addEventListener("click", () => {
+            closeModal();
+          });
+
+          document.getElementById("nextIntroBtn").addEventListener("click", () => {
+            openWelcomeRulesModal();
+          });
+        }
+
+        function openWelcomeRulesModal() {
+          openModal(
+            "分数与复习规则",
+            `
+            <div class="modal-desc">
+              下面是最关键的数值规则。理解这些规则后，你会更容易决定什么时候该冲成绩，什么时候该保命。
+            </div>
+            <ul class="welcome-list">
+              <li>初始每门课会随机获得 12 - 28 点复习点数，后续通过复习继续累积。</li>
+              <li>每次复习固定消耗 25 精力，当前精力越高，单次复习收益越高。</li>
+              <li>当前复习收益档位：精力 >80 得 +12，60~80 得 +10，50~60 得 +8，30~50 得 +6，低于 30 得 +4。</li>
+              <li>考试成绩大致由“34 + 复习点数 × 0.46 + 小幅随机波动”决定。</li>
+              <li>复习点数达到 110 和 140 时，还有额外成绩奖励。</li>
+              <li>一般来说：60 左右仍可能低分，100 左右属于中上区，110 以上开始有机会冲 90+，140 以上基本稳定高分。</li>
+              <li>开启小航 AI 辅导并答对题目，可以让本次复习收益获得 1.5 倍暴击。</li>
+              <li>最终 GPA 按北航风格二次函数换算，并限制在 1.0 到 4.0 之间显示。</li>
+            </ul>
+            <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+              <button class="action-btn secondary-btn" id="prevIntroBtn">上一页</button>
+              <button class="action-btn buy-btn" id="startGameBtn">开始突击</button>
+            </div>
+            `,
+            false
+          );
+
+          document.getElementById("prevIntroBtn").addEventListener("click", () => {
+            showWelcomeModal();
+          });
+
+          document.getElementById("startGameBtn").addEventListener("click", () => {
+            closeModal();
+          });
+        }
 
     /**********************************************************************
      * 十三、复习菜单与逻辑
@@ -2386,17 +2425,66 @@
       return allCoursesExamined();
     }
 
-    function getEvaluationByGpa(avgGpa) {
-      if (avgGpa >= 3.9) {
-        return "沈元奖章大佬，建议直接保研并顺手带飞室友。";
+        function getEvaluationByGpa(avgGpa, avgScore, courses) {
+      const failCount = courses.filter((course) => (course.score || 0) < 60).length;
+      const highScoreCount = courses.filter((course) => (course.score || 0) >= 90).length;
+      const excellentCount = courses.filter((course) => (course.score || 0) >= 85).length;
+      const scoreSpread = Math.max(...courses.map((course) => course.score || 0)) - Math.min(...courses.map((course) => course.score || 0));
+      const topCourse = [...courses].sort((a, b) => (b.score || 0) - (a.score || 0))[0];
+      const lowCourse = [...courses].sort((a, b) => (a.score || 0) - (b.score || 0))[0];
+
+      let title = "学院路普通生存者";
+      if (failCount >= 3) {
+        title = "大运村深度冬眠者";
+      } else if (failCount >= 1) {
+        title = "补考边缘试探专家";
+      } else if (highScoreCount >= 5) {
+        title = "沈元奖章预备役";
+      } else if (highScoreCount >= 3) {
+        title = "期末火力全开选手";
+      } else if (excellentCount >= 4) {
+        title = "稳定高绩点生产者";
+      } else if (avgGpa >= 3.5) {
+        title = "学院路卷王候选人";
+      } else if (avgGpa >= 2.7) {
+        title = "稳扎稳打通关者";
+      } else if (avgGpa >= 2.0) {
+        title = "及格线守门员";
       }
-      if (avgGpa >= 3.0) {
-        return "稳定发挥，属于学院路正常人类，期末生态位已经很稳。";
+
+      let profile = "这学期你的总体表现还算均衡。";
+      if (failCount >= 3) {
+        profile = `你有 ${failCount} 门课程直接失守，说明这局不是时间不够，而是整体节奏已经彻底失控。`;
+      } else if (failCount >= 1) {
+        profile = `你虽然保住了大部分科目，但 ${lowCourse.name} 还是以 ${lowCourse.score} 分提醒你，战略放弃是有代价的。`;
+      } else if (highScoreCount >= 5) {
+        profile = `六门里有 ${highScoreCount} 门冲上 90+，这已经不是突击，这是对考试周的正面接管。`;
+      } else if (highScoreCount >= 3) {
+        profile = `你一共打出了 ${highScoreCount} 门 90+，高分爆发力很强，关键科目基本都抬上去了。`;
+      } else if (excellentCount >= 4) {
+        profile = `虽然 90+ 不算特别多，但你有 ${excellentCount} 门在 85 分以上，整体盘面非常扎实。`;
+      } else if (scoreSpread >= 30) {
+        profile = `你的成绩波动达到 ${scoreSpread} 分，说明这局明显偏科，${topCourse.name} 和 ${lowCourse.name} 几乎像是两个人在考。`;
+      } else if (avgScore >= 80) {
+        profile = "你没有极端高光，但整体都在线，属于老师看了会觉得很省心的一类成绩单。";
+      } else {
+        profile = "这份成绩单主打一个能活下来，但离真正从容还有一段距离。";
       }
-      if (avgGpa >= 2.0) {
-        return "及格万岁，考完先去食堂奖励自己，再考虑下学期怎么卷。";
+
+      let styleComment = `本局最强科目是 ${topCourse.name}（${topCourse.score} 分），最危险科目是 ${lowCourse.name}（${lowCourse.score} 分）。`;
+      if (scoreSpread >= 35) {
+        styleComment += " 你的打法偏科很重，像是在用少数强课硬抬总盘。";
+      } else if (highScoreCount >= 2 && failCount === 0) {
+        styleComment += " 你的运营风格比较成熟，既能冲高分，也没有把弱课完全放掉。";
+      } else if (gameState.stats.totalWork >= gameState.stats.totalStudy / 2) {
+        styleComment += " 你在赚钱和学习之间分了不少精力，这份成绩已经算是多线程生存的结果。";
+      } else if (gameState.stats.aiCorrect >= 3) {
+        styleComment += " 你明显把 AI 辅导用出了价值，属于会借工具抬效率的实用主义选手。";
+      } else {
+        styleComment += " 下次如果能更早处理弱课，最终盘面还会更稳。";
       }
-      return "大运村长眠者，下学期请早点去图书馆占座，别再把希望押给最后一周。";
+
+      return `<strong>${title}</strong><br />${profile}<br />${styleComment}`;
     }
 
     function triggerSettlement() {
@@ -2420,7 +2508,7 @@
       const gpas = gameState.courses.map((c) => c.gpa || 0);
       const avgScore = scores.reduce((a, b) => a + b, 0) / scores.length;
       const avgGpa = gpas.reduce((a, b) => a + b, 0) / gpas.length;
-      const evaluation = getEvaluationByGpa(avgGpa);
+      const evaluation = getEvaluationByGpa(avgGpa, avgScore, gameState.courses);
 
       settlementBody.innerHTML = `
         <div class="summary-grid">
