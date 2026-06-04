@@ -1690,37 +1690,69 @@
       return 4;
     }
 
-    function maybeTriggerStudyEvent(course, payload, forceTrigger = false) {
+        function maybeTriggerStudyEvent(course, payload, forceTrigger = false) {
       if (forceTrigger || Math.random() < 0.4) {
         const event = STUDY_EVENTS[randomInt(0, STUDY_EVENTS.length - 1)];
         const resultText = event.effect(gameState, course, payload);
         gameState.stats.randomEvents += 1;
         addLog(`【复习事件】${event.name}：${resultText}`, event.type);
-        return true;
+        return {
+          name: event.name,
+          type: event.type,
+          resultText,
+        };
       }
-      return false;
+      return null;
     }
 
-    function maybeTriggerWorkEvent(job, forceTrigger = false) {
+        function maybeTriggerWorkEvent(job, forceTrigger = false) {
       if (forceTrigger || Math.random() < 0.28) {
         const event = WORK_EVENTS[randomInt(0, WORK_EVENTS.length - 1)];
         const resultText = event.effect(gameState, job);
         gameState.stats.randomEvents += 1;
         addLog(`【兼职事件】${event.name}：${resultText}`, event.type);
-        return true;
+        return {
+          name: event.name,
+          type: event.type,
+          resultText,
+        };
       }
-      return false;
+      return null;
     }
 
-    function maybeTriggerRestEvent(payload, forceTrigger = false) {
+        function maybeTriggerRestEvent(payload, forceTrigger = false) {
       if (forceTrigger || Math.random() < 0.35) {
         const event = REST_EVENTS[randomInt(0, REST_EVENTS.length - 1)];
         const resultText = event.effect(gameState, payload);
         gameState.stats.randomEvents += 1;
         addLog(`【休息事件】${event.name}：${resultText}`, event.type);
-        return true;
+        return {
+          name: event.name,
+          type: event.type,
+          resultText,
+        };
       }
-      return false;
+      return null;
+    }
+
+    function openEventResultModal(title, resultText, buttonText, onConfirm) {
+      openModal(
+        title,
+        `
+        <div class="modal-desc">${resultText}</div>
+        <div style="margin-top:14px;">
+          <button class="action-btn buy-btn" id="eventConfirmBtn">${buttonText}</button>
+        </div>
+        `,
+        false
+      );
+
+      document.getElementById("eventConfirmBtn").addEventListener("click", () => {
+        closeModal();
+        if (typeof onConfirm === "function") {
+          onConfirm();
+        }
+      });
     }
 
     function maybeTriggerGlobalChoiceEvent(actionType, onComplete) {
@@ -2030,7 +2062,7 @@
           baseGain,
         };
 
-        maybeTriggerStudyEvent(course, payload);
+        payload.eventInfo = maybeTriggerStudyEvent(course, payload);
 
         if (gameState.aiEnabled && Math.random() < 0.35) {
           gameState.stats.aiTriggered += 1;
@@ -2042,7 +2074,7 @@
       });
     }
 
-    function finalizeStudy(courseId, payload, aiTriggered, aiCorrect) {
+        function finalizeStudy(courseId, payload, aiTriggered, aiCorrect) {
       const course = gameState.courses.find((c) => c.id === courseId);
       if (!course) return;
 
@@ -2062,8 +2094,19 @@
 
       addLog(`你复习了 ${course.name}，获得 ${gain} 点复习进度。`, gain >= 15 ? "good" : "normal");
 
+      const continueFlow = () => {
+        refreshAllUI();
+        advanceTime();
+      };
+
       refreshAllUI();
-      advanceTime();
+
+      if (payload.eventInfo) {
+        openEventResultModal(`复习事件：${payload.eventInfo.name}`, payload.eventInfo.resultText, "继续复习节奏", continueFlow);
+        return;
+      }
+
+      continueFlow();
     }
 
     /**********************************************************************
@@ -2191,10 +2234,20 @@
 
         addLog(`你完成了 ${job.name}，获得 ${job.moneyGain} 金钱。`, "normal");
 
-        maybeTriggerWorkEvent(job);
+        const workEventInfo = maybeTriggerWorkEvent(job);
+        const continueFlow = () => {
+          refreshAllUI();
+          advanceTime();
+        };
 
         refreshAllUI();
-        advanceTime();
+
+        if (workEventInfo) {
+          openEventResultModal(`兼职事件：${workEventInfo.name}`, workEventInfo.resultText, "继续安排", continueFlow);
+          return;
+        }
+
+        continueFlow();
       });
     }
 
@@ -2215,7 +2268,7 @@
         }
 
         const payload = { recovery };
-        maybeTriggerRestEvent(payload);
+        const restEventInfo = maybeTriggerRestEvent(payload);
 
         recovery = Math.max(5, payload.recovery);
 
@@ -2224,8 +2277,19 @@
 
         addLog(`你选择了休息，恢复 ${recovery} 点精力。`, "good");
 
+        const continueFlow = () => {
+          refreshAllUI();
+          advanceTime();
+        };
+
         refreshAllUI();
-        advanceTime();
+
+        if (restEventInfo) {
+          openEventResultModal(`休息事件：${restEventInfo.name}`, restEventInfo.resultText, "继续安排", continueFlow);
+          return;
+        }
+
+        continueFlow();
       });
     }
 
